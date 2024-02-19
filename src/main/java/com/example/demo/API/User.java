@@ -1,24 +1,34 @@
 package com.example.demo.API;
-
+import java.util.Date;
 public class User {
-    private long msisdn;
-
-    @Override
-    public String toString() {
-        return "model{" +
-                "msisdn=" + msisdn +
-                '}';
-    }
+    private Long msisdn;
+    private Date date;
 
     public User(long msisdn) {
         this.msisdn = msisdn;
     }
 
-    public long getMsisdn() {
+    public Long getMsisdn() {
         return msisdn;
     }
 
-    public void setMsisdn(long msisdn) {
+    public void setMsisdn(Long msisdn) {
         this.msisdn = msisdn;
     }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+    public Date getDate() {
+        return date;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "msisdn=" + msisdn +
+                ", date=" + date +
+                '}';
+    }
+    
 }
