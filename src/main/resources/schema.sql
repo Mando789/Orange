@@ -1,4 +1,7 @@
 CREATE TABLE Users (
-    Msisdn BIGINT primary key,
-    LoginDay DATE
+    ID INT auto_increment primary key,
+    MSISDN BIGINT ,
+    LOGIN_DAY DATE,
+    GIFT VARCHAR(10),
+    FLAG BOOLEAN
 );

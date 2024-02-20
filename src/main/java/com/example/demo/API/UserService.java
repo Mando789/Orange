@@ -1,29 +1,31 @@
 package com.example.demo.API;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 
-import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
-import java.util.Date;
+import java.util.Optional;
+import java.util.Random;
 
 @Service
 public class UserService {
 
-    private UserRepo repo;
-   // private User user;
+
+    private CrudRepo crudRepo;
+    private final Logger logger = LoggerFactory.getLogger(UserService.class);
 
     @Autowired
-    public UserService(UserRepo repo) {
-        this.repo = repo;
-        //this.user = user;
+    public UserService(CrudRepo crudRepo) {
+        this.crudRepo = crudRepo;
+
     }
 
     public boolean IsNew (Long msisdn){
-       if(!repo.MsisdnExist(msisdn)) //new user
-       {
+       if(!crudRepo.existsByMsisdn(msisdn)) {  //new user
            CreateUser(msisdn);
            return true;
        } else {
@@ -33,21 +35,40 @@ public class UserService {
     }
 
     public void CreateUser(Long msisdn){
-        User user = new User(msisdn);
+        Users user = new Users(msisdn);
         user.setMsisdn(msisdn);
-        user.setDate(new Date());
-        repo.SaveNewUser(user);
+        user.setLoginDay(LocalDate.now());
+
+        String[] gifts = {"gift1", "gift2", "gift3"};
+        Random random = new Random();
+        user.setGift(gifts[random.nextInt(gifts.length)]);
+
+        crudRepo.save(user);
     }
 
     public Long DaysAgo(Long msisdn){
-        System.out.println(repo.GetLastLogin(msisdn));
-
-        LocalDate date = repo.GetLastLogin(msisdn).toInstant()
-                .atZone(ZoneId.systemDefault())
-                .toLocalDate();
-
-
-        return ChronoUnit.DAYS.between(LocalDate.now(), date );
+        LocalDate lastLogin = crudRepo.FindDate(msisdn);
+        logger.info(lastLogin.toString());
+        return ChronoUnit.DAYS.between(LocalDate.now(), lastLogin);
     }
 
+    public boolean checkFlag(Long msisdn) {
+        return crudRepo.checksFlag(msisdn);
+
+    }
+
+    public String getGift(Long msisdn) {
+        return crudRepo.getGift(msisdn);
+    }
+
+    public void giftRedeemed(Long msisdn)
+    {
+
+        Users user = new Users();
+        user = crudRepo.findByMsisdn(msisdn);
+        user.setFlag(true);
+        crudRepo.save(user);
+
+
+    }
 }
