@@ -1,34 +1,53 @@
 package com.example.demo.API;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.time.LocalDate;
+
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
+import java.util.Date;
 
 @Service
 public class UserService {
 
-    private List<User> userList;
+    private UserRepo repo;
+   // private User user;
 
-    public UserService(){
-        userList = new ArrayList<>();
+    @Autowired
+    public UserService(UserRepo repo) {
+        this.repo = repo;
+        //this.user = user;
+    }
 
-        User User1= new User(01);
-        User User2= new User(02);
-        User User3= new User(03);
-        User User4= new User(04);
-
-        userList.addAll(Arrays.asList(User1,User2,User3,User4));
+    public boolean IsNew (Long msisdn){
+       if(!repo.MsisdnExist(msisdn)) //new user
+       {
+           CreateUser(msisdn);
+           return true;
+       } else {
+           return false;
+       }
 
     }
 
-    public long getId(long msisdn) {
-        for (User user : userList){
-            if (msisdn == user.getMsisdn()){
-                return user.getMsisdn();
-            }
-        }
-        return 0;
+    public void CreateUser(Long msisdn){
+        User user = new User(msisdn);
+        user.setMsisdn(msisdn);
+        user.setDate(new Date());
+        repo.SaveNewUser(user);
     }
+
+    public Long DaysAgo(Long msisdn){
+        System.out.println(repo.GetLastLogin(msisdn));
+
+        LocalDate date = repo.GetLastLogin(msisdn).toInstant()
+                .atZone(ZoneId.systemDefault())
+                .toLocalDate();
+
+
+        return ChronoUnit.DAYS.between(LocalDate.now(), date );
+    }
+
 }

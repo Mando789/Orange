@@ -9,17 +9,29 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 public class Controller {
 
-    private UserService user;
+    private UserService userService;
 
     @Autowired
-    public Controller(UserService user){
-        this.user = user;
+
+    public Controller(UserService userService) {
+        this.userService = userService;
+
     }
+
+
     @GetMapping("/welcome")
-    public String Welcome(@RequestParam long msisdn)
+    public String Welcome(@RequestParam Long msisdn)
     {
-        long id = user.getId(msisdn);
-        return "Welcome " + id;
+        if (userService.IsNew(msisdn))
+        {
+            return "Welcome";
+        } else {
+
+            Long days = userService.DaysAgo(msisdn);
+
+           return "Welcome again \n\n" + "Last login was " + days + " days ago" ;
+        }
+
 
     }
 
