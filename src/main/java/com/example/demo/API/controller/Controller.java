@@ -1,9 +1,11 @@
 package com.example.demo.API.controller;
 
 import com.example.demo.API.model.Gift;
+import com.example.demo.API.model.HRedemption;
 import com.example.demo.API.services.CounterService;
 import com.example.demo.API.services.DialsService;
 import com.example.demo.API.services.GiftService;
+import com.example.demo.API.services.HRedemptionService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,15 +21,16 @@ public class Controller {
 
     DialsService dialsService;
     CounterService counterService;
-
+    HRedemptionService hRedemptionService;
     GiftService giftService;
    // private final Logger logger = LoggerFactory.getLogger(UserService.class);
 
 
     @Autowired
-    public Controller(DialsService dialsService, CounterService counterService, GiftService giftService) {
+    public Controller(DialsService dialsService, CounterService counterService,  GiftService giftService , HRedemptionService hRedemptionService) {
         this.dialsService = dialsService;
         this.counterService = counterService;
+        this.hRedemptionService = hRedemptionService;
         this.giftService = giftService;
     }
 
@@ -54,8 +57,13 @@ public class Controller {
         }
 
         Integer giftId = counterService.getGiftId(msisdn);
-        Optional<Gift> gift = giftService.getGift(giftId);
-        return "Gift Id and Name \n" + gift.toString();
+        Optional<Gift> giftOpt = giftService.getGift(giftId);
+        if(giftOpt.isPresent()){
+            Gift gift = giftOpt.get();
+            return "Gift Id: " + gift.getId() + "  Name: " + gift.getName();
+        }
+
+        return "No gift";
 
 
     }
@@ -74,6 +82,7 @@ public class Controller {
         {
             Gift gift = giftOpt.get();
             counterService.increment(msisdn);
+            hRedemptionService.redemptionLog(msisdn,id);
             return "Here is your Gift!! \n " + gift.getName();
         }
 

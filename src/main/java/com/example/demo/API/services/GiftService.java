@@ -10,7 +10,7 @@ import java.util.Optional;
 @Service
 public class GiftService {
 
-    private GiftRepository giftRepo;
+    private final GiftRepository giftRepo;
 
     @Autowired
     public GiftService(GiftRepository giftRepo) {

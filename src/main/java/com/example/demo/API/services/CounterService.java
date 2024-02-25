@@ -11,7 +11,7 @@ import java.util.Optional;
 @Service
 public class CounterService {
 
-    private CounterRepository counterRepo;
+    private final CounterRepository counterRepo;
 
     @Autowired
     public CounterService(CounterRepository counterRepo) {
@@ -43,7 +43,8 @@ public class CounterService {
         Optional<Counter> userOpt= counterRepo.findByMsisdn(msisdn);
         if(userOpt.isPresent()){
             Counter user= userOpt.get();
-            user.setCounter(user.getCounter() + 1);
+            Integer newCount = user.getCounter() + 1 ;
+            user.setCounter(newCount);
             counterRepo.save(user);
         }
 

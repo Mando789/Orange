@@ -1,9 +1,12 @@
 package com.example.demo.API.model;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Table;
 
 import java.time.LocalDate;
 
+
+@Table ("HREDEMPTION")
 public class HRedemption {
 
     @Id
@@ -11,13 +14,24 @@ public class HRedemption {
     private Long msisdn;
     private Integer giftId;
     private Integer groupId;
-    private LocalDate date;
+    private LocalDate redemptionDate;
 
-    public HRedemption(Long msisdn, Integer giftId, Integer groupId, LocalDate date) {
+
+
+    /////// trying but delete this if it didn't work
+    public HRedemption(Integer id, Long msisdn, Integer giftId, Integer groupId, LocalDate redemptionDate) {
+        this.id = id;
         this.msisdn = msisdn;
         this.giftId = giftId;
         this.groupId = groupId;
-        this.date = date;
+        this.redemptionDate = redemptionDate;
+    }
+
+    public HRedemption(Long msisdn, Integer giftId, Integer groupId, LocalDate redemptionDate) {
+        this.msisdn = msisdn;
+        this.giftId = giftId;
+        this.groupId = groupId;
+        this.redemptionDate = redemptionDate;
     }
 
     public Integer getId() {
@@ -52,12 +66,12 @@ public class HRedemption {
         this.groupId = groupId;
     }
 
-    public LocalDate getDate() {
-        return date;
+    public LocalDate getRedemptionDate() {
+        return redemptionDate;
     }
 
-    public void setDate(LocalDate date) {
-        this.date = date;
+    public void setRedemptionDate(LocalDate redemptionDate) {
+        this.redemptionDate = redemptionDate;
     }
 
     @Override
@@ -67,7 +81,7 @@ public class HRedemption {
                 ", msisdn=" + msisdn +
                 ", giftId=" + giftId +
                 ", groupId=" + groupId +
-                ", date=" + date +
+                ", date=" + redemptionDate +
                 '}';
     }
 }
